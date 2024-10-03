@@ -1,0 +1,36 @@
+# fly.toml app configuration file generated for yral-icpumpsearch on 2024-10-03T21:04:21+05:30
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'yral-icpumpsearch'
+primary_region = 'ams'
+kill_signal = 'SIGINT'
+kill_timeout = '5s'
+swap_size_mb = 32768
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  PORT = '50051'
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 50051
+
+  [[services.ports]]
+    port = 443
+    handlers = ['tls']
+
+    [services.ports.tls_options]
+      alpn = ['h2']
+
+  [services.concurrency]
+    hard_limit = 20000
+    soft_limit = 1000
+
+[[vm]]
+  memory = '2gb'
+  cpu_kind = 'shared'
+  cpus = 1
