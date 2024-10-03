@@ -10,7 +10,7 @@ def run():
     token = os.getenv('SEARCH_TOKEN_ICPUMP')
     
     # Print the token for debugging (remove in production)
-    print(f"Token: {token}")
+    # print(f"Token: {token}")
 
     with grpc.secure_channel(server, credentials=grpc.ssl_channel_credentials()) as channel:
         stub = search_rec_pb2_grpc.SearchServiceStub(channel)
