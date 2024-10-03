@@ -27,3 +27,5 @@ jobs:
           GOOGLE_GENAI_API_KEY: ${{ secrets.GOOGLE_GENAI_API_KEY }}
       - name: Deploy a docker container to fly.io
         run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_SEARCH_LLM_TOKEN }}
