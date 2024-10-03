@@ -32,7 +32,7 @@ import os
 from google.oauth2 import service_account
 
 service_cred = os.environ['SERVICE_CRED']
-service_acc_creds = json.loads(service_cred)
+service_acc_creds = json.loads(service_cred, strict=False)
 genai.configure(api_key=os.environ['GOOGLE_GENAI_API_KEY'])
 credentials = service_account.Credentials.from_service_account_info(service_acc_creds)
 base_table = "`hot-or-not-feed-intelligence.icpumpfun.token_metadata_v2`"
