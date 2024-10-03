@@ -18,10 +18,10 @@ jobs:
           submodules: recursive
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Set Fly secrets
+        run: |
+          flyctl secrets set --stage --app "yral-icpumpsearch" "SERVICE_CRED=${{ secrets.SERVICE_CRED }}"
+          flyctl secrets set --stage --app "yral-icpumpsearch" "GOOGLE_GENAI_API_KEY=${{ secrets.GOOGLE_GENAI_API_KEY }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_SEARCH_LLM_TOKEN }}
-        run: |
-          flyctl secrets set --stage --app "yral-icpumpsearch" SERVICE_CRED=${{ secrets.SERVICE_CRED }}
-          flyctl secrets set --stage --app "yral-icpumpsearch" GOOGLE_GENAI_API_KEY=${{ secrets.GOOGLE_GENAI_API_KEY }}
       - name: Deploy a docker container to fly.io
         run: flyctl deploy --remote-only
