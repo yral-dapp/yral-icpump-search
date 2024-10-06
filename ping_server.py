@@ -14,7 +14,7 @@ def run():
 
     with grpc.secure_channel(server, credentials=grpc.ssl_channel_credentials()) as channel:
         stub = search_rec_pb2_grpc.SearchServiceStub(channel)
-        request = search_rec_pb2.SearchRequest(input_query="Show me tokens regarding test that are most recently created. What are the top 3 tokens here about?")
+        request = search_rec_pb2.SearchRequest(input_query="fire")
         
         # Create metadata with the token
         metadata = [('authorization', f'Bearer {token}')]

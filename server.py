@@ -16,8 +16,8 @@ from search_agent_bq import SearchAgent
 _LOGGER = logging.getLogger(__name__)
 
 _ONE_DAY = 24 * 60 * 60
-# _PROCESS_COUNT = multiprocessing.cpu_count()
-_PROCESS_COUNT = 1
+_PROCESS_COUNT = multiprocessing.cpu_count()
+# _PROCESS_COUNT = 1
 _THREAD_CONCURRENCY = 10
 _BIND_ADDRESS = "[::]:50051"
 _AUTH_HEADER_KEY = "authorization"
@@ -58,14 +58,12 @@ class SearchServicer(search_rec_pb2_grpc.SearchServiceServicer):
         self.search_agent = SearchAgent() 
 
     def Search(self, request, context):
-        # Implement your search logic here
         search_query = request.input_query
         _LOGGER.info(f"Received search query: {search_query}")
         df, answer = self.search_agent.process_query(search_query)
         response = search_rec_pb2.SearchResponse()
         response.answer = answer
         total_responses_fetched = len(df)
-        # For demonstration, we'll add a dummy item
         for i in range(total_responses_fetched):
             item = response.items.add()
             item.canister_id = df.iloc[i]['canister_id']

@@ -17,6 +17,7 @@ import pandas as pd
 import pickle
 import ast
 import google.generativeai as genai
+from vertexai.generative_models import HarmBlockThreshold, HarmCategory
 import yaml
 import duckdb
 import numpy as np
@@ -35,7 +36,7 @@ service_cred = os.environ['SERVICE_CRED']
 service_acc_creds = json.loads(service_cred, strict=False)
 genai.configure(api_key=os.environ['GOOGLE_GENAI_API_KEY'])
 credentials = service_account.Credentials.from_service_account_info(service_acc_creds)
-base_table = "`hot-or-not-feed-intelligence.icpumpfun.token_metadata_v2`"
+base_table = "`hot-or-not-feed-intelligence.icpumpfun.token_metadata_v1`"
 
 # %%
 
@@ -56,19 +57,35 @@ class LLMInteract:
             max_output_tokens=8192,
         )
         self.debug = debug
-        # self.safety_settings = {
-        #     HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
-        #     HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
-        #     HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
-        #     HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-        # }
+        self.safety_settings = [
+{
+            "category": "HARM_CATEGORY_DANGEROUS",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE",
+        },
+        ]
 
     def qna(self, user_prompt):
         contents = [user_prompt]
         response = self.model.generate_content(
             contents,
             generation_config=self.generation_config,
-            # safety_settings=self.safety_settings,
+            safety_settings=self.safety_settings,
         )
         if self.debug:
             with open('log.txt', 'a') as log_file:
@@ -179,7 +196,17 @@ class SearchAgent:
                 
                 ndf = future1.result()
                 ndf2 = future2.result()
+
             ndf = pd.concat([ndf, ndf2]).sort_values(by = 'distance').drop_duplicates(subset = 'token_name') 
+            from fuzzywuzzy import fuzz
+
+            def calculate_fuzzy_match_ratio(word1, word2):
+                return 1 - (fuzz.ratio(word1, word2) / 100)
+
+            ndf['fuzzy_match_ratio'] = ndf['token_name'].apply(calculate_fuzzy_match_ratio, word2=search_term)
+            ndf['combined_score'] = ndf['distance'] + ndf['fuzzy_match_ratio']
+            ndf = ndf.sort_values(by='combined_score')
+            
             
 
         
@@ -197,6 +224,7 @@ class SearchAgent:
                         log_file.write(f"select_statement: {select_statement}\n")
                         log_file.write("="*100 + "\n")
                 ndf = self.bq_client.query(select_statement.replace('*').replace('ndf', table_name) + ' limit 100').to_dataframe() # TODO: add the semantic search module here in searhc agent and use the table name modularly 
+
             else:
                 if self.debug:
                     with open('log.txt', 'a') as log_file:
@@ -211,6 +239,9 @@ class SearchAgent:
         ndf['created_at'] = ndf.created_at.astype(str)
         return ndf, answer
 
+
+
+
 # Note: query_parser_prompt and qna_prompt should be defined here as well
 if __name__ == "__main__":
     # Example usage
@@ -224,7 +255,7 @@ if __name__ == "__main__":
 
     # Example query
     # user_query = "Show tokens like test sorted by created_at descending. What are the top 5 tokens talking about here?"
-    user_query = "Jay"
+    user_query = "fire"
     # Log the response time
     start_time = time.time()
     result_df, answer = search_agent.process_query(user_query)

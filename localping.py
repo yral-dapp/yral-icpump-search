@@ -13,7 +13,7 @@ def run():
         stub = search_rec_pb2_grpc.SearchServiceStub(channel)
         
         # Create a request
-        request = search_rec_pb2.SearchRequest(input_query="test")
+        request = search_rec_pb2.SearchRequest(input_query="fire")
         
         # Create metadata with the token
         metadata = [('authorization', f'Bearer {token}')]
