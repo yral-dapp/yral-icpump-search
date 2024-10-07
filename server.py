@@ -27,32 +27,32 @@ _JWT_PAYLOAD = {
     "company": "gobazzinga",
 }
 
-class SignatureValidationInterceptor(grpc.ServerInterceptor):
-    def __init__(self):
-        def abort(ignored_request, context):
-            _LOGGER.warning("Aborting request due to invalid signature")
-            context.abort(grpc.StatusCode.UNAUTHENTICATED, "Invalid signature")
+# class SignatureValidationInterceptor(grpc.ServerInterceptor):
+#     def __init__(self):
+#         def abort(ignored_request, context):
+#             _LOGGER.warning("Aborting request due to invalid signature")
+#             context.abort(grpc.StatusCode.UNAUTHENTICATED, "Invalid signature")
 
-        self._abort_handler = grpc.unary_unary_rpc_method_handler(abort)
+#         self._abort_handler = grpc.unary_unary_rpc_method_handler(abort)
 
-    def intercept_service(self, continuation, handler_call_details):
-        metadata_dict = dict(handler_call_details.invocation_metadata)
-        try:
-            token = metadata_dict[_AUTH_HEADER_KEY].split()[1]
-            payload = jwt.decode(
-                token,
-                _PUBLIC_KEY,
-                algorithms=["EdDSA"],
-            )
+#     def intercept_service(self, continuation, handler_call_details):
+#         metadata_dict = dict(handler_call_details.invocation_metadata)
+#         try:
+#             token = metadata_dict[_AUTH_HEADER_KEY].split()[1]
+#             payload = jwt.decode(
+#                 token,
+#                 _PUBLIC_KEY,
+#                 algorithms=["EdDSA"],
+#             )
 
-            if payload == _JWT_PAYLOAD:
-                return continuation(handler_call_details)
-            else:
-                _LOGGER.warning(f"Received invalid payload: {payload}")
-                return self._abort_handler
-        except Exception as e:
-            _LOGGER.error(f"Exception occurred during token validation: {e}")
-            return self._abort_handler
+#             if payload == _JWT_PAYLOAD:
+#                 return continuation(handler_call_details)
+#             else:
+#                 _LOGGER.warning(f"Received invalid payload: {payload}")
+#                 return self._abort_handler
+#         except Exception as e:
+#             _LOGGER.error(f"Exception occurred during token validation: {e}")
+#             return self._abort_handler
 class SearchServicer(search_rec_pb2_grpc.SearchServiceServicer):
     def __init__(self):
         self.search_agent = SearchAgent() 
@@ -94,7 +94,7 @@ def _run_server():
 
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=_THREAD_CONCURRENCY),
-        interceptors=(SignatureValidationInterceptor(),),
+        # interceptors=(SignatureValidationInterceptor(),),
         options=options
     )
     search_rec_pb2_grpc.add_SearchServiceServicer_to_server(
