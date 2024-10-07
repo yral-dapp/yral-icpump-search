@@ -198,7 +198,7 @@ class SearchAgent:
         select_statement = "SELECT * FROM ndf"
         search_intent = parsed_res['search_intent']
         if search_intent:
-            search_term = parsed_res['search_term']
+            search_term = parsed_res['search_term'].replace('token', '')
             import concurrent.futures
 
             with concurrent.futures.ThreadPoolExecutor() as executor:

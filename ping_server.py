@@ -17,12 +17,12 @@ def run():
         request = search_rec_pb2.SearchRequest(input_query="fire")
         
         # Create metadata with the token
-        metadata = [('authorization', f'Bearer {token}')]
+        # metadata = [('authorization', f'Bearer {token}')]
 
         # Print metadata for debugging (remove in production)
-        print(f"Metadata: {metadata}")
+        # print(f"Metadata: {metadata}")
         
-        response = stub.Search(request, metadata=metadata)
+        response = stub.Search(request)#, metadata=metadata)
         print("Search service is up and running!")
         print("Received response:")
         print(f"Answer: {response.answer}")
