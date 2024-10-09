@@ -14,7 +14,7 @@ def run():
 
     with grpc.secure_channel(server, credentials=grpc.ssl_channel_credentials()) as channel:
         stub = search_rec_pb2_grpc.SearchServiceStub(channel)
-        request = search_rec_pb2.SearchRequest(input_query="fire")
+        request = search_rec_pb2.SearchRequest(input_query="dog tokens")
         
         # Create metadata with the token
         # metadata = [('authorization', f'Bearer {token}')]
@@ -26,7 +26,7 @@ def run():
         print("Search service is up and running!")
         print("Received response:")
         print(f"Answer: {response.answer}")
-        for item in response.items:
+        for item in response.items[:3]:
             print(f"Canister ID: {item.canister_id}")
             print(f"Description: {item.description}")
             print(f"Host: {item.host}")

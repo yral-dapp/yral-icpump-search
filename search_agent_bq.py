@@ -249,9 +249,8 @@ class SearchAgent:
                 ndf = duckdb.sql(select_statement).to_df() 
 
         answer = ""
-        if True:
-            yaml_data = yaml.dump(ndf[self.rag_columns].head(10).to_dict(orient='records'))
-            answer = self.qna_llm.qna(qna_prompt.replace('__user_query__', user_query).replace('__yaml_data__', yaml_data))
+        yaml_data = yaml.dump(ndf[self.rag_columns].head(10).to_dict(orient='records'))
+        answer = self.qna_llm.qna(qna_prompt.replace('__user_query__', user_query).replace('__yaml_data__', yaml_data))
         ndf['created_at'] = ndf.created_at.astype(str)
         return ndf, answer
 
@@ -296,14 +295,15 @@ if __name__ == "__main__":
 
     # List of queries to run
     queries = [
-        "Show tokens like test sorted by created_at descending. What are the top 5 tokens talking about here?",
+        # "Show tokens like test sorted by created_at descending. What are the top 5 tokens talking about here?",
         "fire",
-        "Show me tokens like test created last month",
-        "Tokens related to animals",
-        "Tokens related to dogs, what are the top 5 tokens talking about here?",
-        "Tokens created last month",
-        "Tokens with controversial opinions",
-        "Tokens with revolutionary ideas"
+        # "dog token",
+        # "Show me tokens like test created last month",
+        # "Tokens related to animals",
+        # "Tokens related to dogs, what are the top 5 tokens talking about here?",
+        # "Tokens created last month",
+        # "Tokens with controversial opinions",
+        # "Tokens with revolutionary ideas"
     ]
 
     # Run the queries and save the results
