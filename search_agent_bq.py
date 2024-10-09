@@ -188,9 +188,9 @@ class SearchAgent:
         start_time = time.time()
         res = self.intent_llm.qna(query_parser_prompt.replace('__user_query__', user_query))
         end_time = time.time()
-        print(f"Time taken for intent_llm.qna: {end_time - start_time:.2f} seconds")
+        # print(f"Time taken for intent_llm.qna: {end_time - start_time:.2f} seconds")
         parsed_res = ast.literal_eval(parse_json(res.replace('false', 'False').replace('true', 'True')))
-        print(parsed_res)
+        # print(parsed_res)
         query_intent = parsed_res['query_intent']
         ndf = pd.DataFrame()
 

@@ -27,39 +27,59 @@ _JWT_PAYLOAD = {
     "company": "gobazzinga",
 }
 
-# class SignatureValidationInterceptor(grpc.ServerInterceptor):
-#     def __init__(self):
-#         def abort(ignored_request, context):
-#             _LOGGER.warning("Aborting request due to invalid signature")
-#             context.abort(grpc.StatusCode.UNAUTHENTICATED, "Invalid signature")
+import time
+import random
+from grpc import StatusCode
+from collections import defaultdict
 
-#         self._abort_handler = grpc.unary_unary_rpc_method_handler(abort)
+class PerIPRateLimitingInterceptor(grpc.ServerInterceptor):
+    def __init__(self, max_requests_per_minute, initial_backoff=1, max_backoff=60):
+        self.max_requests_per_minute = max_requests_per_minute
+        self.request_counts = defaultdict(int)
+        self.last_reset_times = defaultdict(float)
+        self.consecutive_failures = defaultdict(int)
+        self.initial_backoff = initial_backoff
+        self.max_backoff = max_backoff
 
-#     def intercept_service(self, continuation, handler_call_details):
-#         metadata_dict = dict(handler_call_details.invocation_metadata)
-#         try:
-#             token = metadata_dict[_AUTH_HEADER_KEY].split()[1]
-#             payload = jwt.decode(
-#                 token,
-#                 _PUBLIC_KEY,
-#                 algorithms=["EdDSA"],
-#             )
+    def intercept_service(self, continuation, handler_call_details):
+        # Extract client IP from metadata
+        metadata = dict(handler_call_details.invocation_metadata)
+        client_ip = metadata.get('x-forwarded-for', '').split(',')[0].strip() or metadata.get('x-real-ip', '')
 
-#             if payload == _JWT_PAYLOAD:
-#                 return continuation(handler_call_details)
-#             else:
-#                 _LOGGER.warning(f"Received invalid payload: {payload}")
-#                 return self._abort_handler
-#         except Exception as e:
-#             _LOGGER.error(f"Exception occurred during token validation: {e}")
-#             return self._abort_handler
+        if not client_ip:
+            _LOGGER.warning("Unable to determine client IP, skipping rate limit check")
+            return continuation(handler_call_details)
+
+        current_time = time.time()
+        if current_time - self.last_reset_times[client_ip] >= 60:
+            self.request_counts[client_ip] = 0
+            self.last_reset_times[client_ip] = current_time
+
+        if self.request_counts[client_ip] >= self.max_requests_per_minute:
+            self.consecutive_failures[client_ip] += 1
+            backoff_time = self.calculate_backoff(self.consecutive_failures[client_ip])
+            _LOGGER.warning(f"Rate limit exceeded for IP: {client_ip}. Please retry after {backoff_time:.2f} seconds.")
+            def abort(ignored_request, context):
+                context.abort(StatusCode.RESOURCE_EXHAUSTED, 
+                              f"Rate limit exceeded for IP: {client_ip}. "
+                              f"Please retry after {backoff_time:.2f} seconds.")
+            return grpc.unary_unary_rpc_method_handler(abort)
+
+        self.request_counts[client_ip] += 1
+        self.consecutive_failures[client_ip] = 0  # Reset consecutive failures on successful request
+        return continuation(handler_call_details)
+
+    def calculate_backoff(self, consecutive_failures):
+        backoff = min(self.initial_backoff * (2 ** (consecutive_failures - 1)), self.max_backoff)
+        return backoff + (random.random() * 0.1 * backoff)  # Add jitter
+
 class SearchServicer(search_rec_pb2_grpc.SearchServiceServicer):
     def __init__(self):
         self.search_agent = SearchAgent() 
 
     def Search(self, request, context):
         search_query = request.input_query
-        _LOGGER.info(f"Received search query: {search_query}")
+        # _LOGGER.info(f"Received search query: {search_query}")
         response = search_rec_pb2.SearchResponse()
         try:
             df, answer = self.search_agent.process_query(search_query)
@@ -92,9 +112,15 @@ def _run_server():
     _LOGGER.info("Starting new server.")
     options = (("grpc.so_reuseport", 1),)
 
+    rate_limit_interceptor = PerIPRateLimitingInterceptor(
+        max_requests_per_minute=10,
+        initial_backoff=1,
+        max_backoff=60
+    )
+
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=_THREAD_CONCURRENCY),
-        # interceptors=(SignatureValidationInterceptor(),),
+        interceptors=(rate_limit_interceptor,),
         options=options
     )
     search_rec_pb2_grpc.add_SearchServiceServicer_to_server(
