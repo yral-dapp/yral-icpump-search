@@ -249,9 +249,9 @@ class SearchAgent:
                 ndf = duckdb.sql(select_statement).to_df() 
 
         answer = ""
-        if parsed_res['qna_intent']:
+        if True:
             yaml_data = yaml.dump(ndf[self.rag_columns].head(10).to_dict(orient='records'))
-            answer = self.qna_llm.qna(qna_prompt.replace('__user_query__', parsed_res['qna_question']).replace('__yaml_data__', yaml_data))
+            answer = self.qna_llm.qna(qna_prompt.replace('__user_query__', user_query).replace('__yaml_data__', yaml_data))
         ndf['created_at'] = ndf.created_at.astype(str)
         return ndf, answer
 
@@ -308,3 +308,13 @@ if __name__ == "__main__":
 
     # Run the queries and save the results
     run_queries_and_save_results(queries, search_agent)
+
+
+## 
+    # credentials = service_account.Credentials.from_service_account_file('/Users/jaydhanwant/Documents/SS/hot-or-not-feed-intelligence-582ffb1dd0c4.json')
+    # bq_client = bigquery.Client(credentials=credentials, project="hot-or-not-feed-intelligence")
+    # ## 
+
+    # df = bq_client.query('select * from icpumpfun.token_metadata_v1 limit 10 ').to_dataframe()
+    # print(df)
+##

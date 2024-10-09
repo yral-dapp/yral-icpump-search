@@ -13,7 +13,7 @@ def run():
         stub = search_rec_pb2_grpc.SearchServiceStub(channel)
         
         # Create a request
-        request = search_rec_pb2.SearchRequest(input_query="fire")
+        request = search_rec_pb2.SearchRequest(input_query="dog token")
         
         # Create metadata with the token
         metadata = [('authorization', f'Bearer {token}')]
@@ -23,7 +23,7 @@ def run():
             response = stub.Search(request, metadata=metadata)
             print("Search Response:")
             print(f"Answer: {response.answer}")
-            for item in response.items:
+            for item in response.items[:3]:
                 print(f"Canister ID: {item.canister_id}")
                 print(f"Description: {item.description}")
                 print(f"Host: {item.host}")
