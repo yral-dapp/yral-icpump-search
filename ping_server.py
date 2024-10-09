@@ -9,18 +9,11 @@ def run():
     # Read the token from the environment variable
     token = os.getenv('SEARCH_TOKEN_ICPUMP')
     
-    # Print the token for debugging (remove in production)
-    # print(f"Token: {token}")
 
     with grpc.secure_channel(server, credentials=grpc.ssl_channel_credentials()) as channel:
         stub = search_rec_pb2_grpc.SearchServiceStub(channel)
-        request = search_rec_pb2.SearchRequest(input_query="dog tokens")
+        request = search_rec_pb2.SearchRequest(input_query="what are some tokens related to dog? What are they talking about?")
         
-        # Create metadata with the token
-        # metadata = [('authorization', f'Bearer {token}')]
-
-        # Print metadata for debugging (remove in production)
-        # print(f"Metadata: {metadata}")
         
         response = stub.Search(request)#, metadata=metadata)
         print("Search service is up and running!")

@@ -185,6 +185,7 @@ class SearchAgent:
  
  
     def process_query(self, user_query, table_name=base_table):
+        self.bq_client.query(f"INSERT INTO `hot-or-not-feed-intelligence.icpumpfun.temp_search_logs` (search_query) VALUES ('{user_query}');") # adding search query logging
         start_time = time.time()
         res = self.intent_llm.qna(query_parser_prompt.replace('__user_query__', user_query))
         end_time = time.time()
