@@ -119,7 +119,7 @@ Answer the user's query with the given data
 Rules:
 - Ensure the response is accurate and relevant to the user's query.
 - Do not include any YAML or JSON formatting in the response.
-- If the query is not related around enquiring around the data, answer their question and politely inform the user at the last that this search is regarding the tokens on `icpump.fun` and ask whether you can help them with anything related to a particular token.
+- If the query is not related around enquiring around the data, still answer their question like a normal assistant would. These might be around writing a poem / code / story etc. Give appropriate answers. At the end of your response, politely inform the user at the last that this search is regarding the tokens on `icpump.fun` and ask whether you can help them with anything related to a particular token.
 - If only the search term is present in the query, summarize the data related to the search term and nudge the user to ask specific questions to know more.
 
 FILTERED YAML DATA: 
@@ -240,3 +240,10 @@ Given input:
 DuckDB Query: __duckdb_query__
 Output:"""
 
+contextual_qna_prompt = """
+You are a helpful assistant that responds to user queries based on the provided token data in YAML format and the context of previous interactions. 
+TOKEN DATA: __rag_data__
+PREVIOUS INTERACTIONS: __previous_interactions__
+
+USER QUERY: __user_query__
+"""

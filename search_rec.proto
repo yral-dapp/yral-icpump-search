@@ -4,6 +4,7 @@ package search;
 
 service SearchService {
   rpc Search (SearchRequest) returns (SearchResponse) {}
+  rpc ContextualSearch (ContextualSearchRequest) returns (ContextualSearchResponse) {}
 }
 
 message SearchRequest {
@@ -13,6 +14,7 @@ message SearchRequest {
 message SearchResponse {
   repeated SearchItem items = 1;
   string answer = 2;
+  string rag_data = 3;
 }
 
 message SearchItem {
@@ -25,4 +27,19 @@ message SearchItem {
   string token_symbol = 7;
   string user_id = 8;
   string created_at = 9;
+}
+
+message ContextualSearchRequest {
+  string input_query = 1;
+  repeated QueryResponsePair previous_interactions = 2;
+  string rag_data = 3;
+}
+
+message ContextualSearchResponse {
+  string answer = 1;
+}
+
+message QueryResponsePair {
+  string query = 1;
+  string response = 2;
 }
