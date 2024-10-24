@@ -114,7 +114,7 @@ class RateLimitInterceptor(ServerInterceptor):
 
     def _cleanup_old_entries(self, current_time):
         for ip in list(self.request_count.keys()):
-            if current_time - self.request_count[ip]['last_request'] > 3600:  # Remove entries older than 1 hour
+            if current_time - self.request_count[ip]['last_request'] > 3600:  
                 del self.request_count[ip]
 
 def _wait_forever(server):
@@ -130,7 +130,7 @@ def _run_server():
     options = (("grpc.so_reuseport", 1),)
 
     # Create the rate limit interceptor
-    rate_limit_interceptor = RateLimitInterceptor(requests_per_minute=5)
+    rate_limit_interceptor = RateLimitInterceptor(requests_per_minute=60)
 
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=_THREAD_CONCURRENCY),
