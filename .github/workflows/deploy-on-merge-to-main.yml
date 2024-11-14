@@ -20,7 +20,7 @@ jobs:
       - name: Set Fly secrets
         run: |
           flyctl secrets set --stage --app "prod-yral-icpumpsearch" "SERVICE_CRED=$(jq -n -c "${SERVICE_CRED}")"
-          flyctl secrets set --stage --app "prod-yral-icpumpsearch" "GOOGLE_GENAI_API_KEY=$(jq -n -c "${GOOGLE_GENAI_API_KEY}")"
+          flyctl secrets set --stage --app "prod-yral-icpumpsearch" "GOOGLE_GENAI_API_KEY=GOOGLE_GENAI_API_KEY"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_IO_DEPLOY_TOKEN }}
           SERVICE_CRED: ${{ secrets.GOOGLE_CLOUD_EVENTS_BQ_SERVICE_ACCOUNT_KEY_JSON }}
