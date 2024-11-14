@@ -5,7 +5,7 @@ import warnings
 
 import search_rec_pb2 as search__rec__pb2
 
-GRPC_GENERATED_VERSION = '1.66.2'
+GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -39,6 +39,11 @@ class SearchServiceStub(object):
                 request_serializer=search__rec__pb2.SearchRequest.SerializeToString,
                 response_deserializer=search__rec__pb2.SearchResponse.FromString,
                 _registered_method=True)
+        self.SearchV1 = channel.unary_unary(
+                '/search.SearchService/SearchV1',
+                request_serializer=search__rec__pb2.SearchRequest.SerializeToString,
+                response_deserializer=search__rec__pb2.SearchResponseV1.FromString,
+                _registered_method=True)
         self.ContextualSearch = channel.unary_unary(
                 '/search.SearchService/ContextualSearch',
                 request_serializer=search__rec__pb2.ContextualSearchRequest.SerializeToString,
@@ -50,6 +55,12 @@ class SearchServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Search(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SearchV1(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -68,6 +79,11 @@ def add_SearchServiceServicer_to_server(servicer, server):
                     servicer.Search,
                     request_deserializer=search__rec__pb2.SearchRequest.FromString,
                     response_serializer=search__rec__pb2.SearchResponse.SerializeToString,
+            ),
+            'SearchV1': grpc.unary_unary_rpc_method_handler(
+                    servicer.SearchV1,
+                    request_deserializer=search__rec__pb2.SearchRequest.FromString,
+                    response_serializer=search__rec__pb2.SearchResponseV1.SerializeToString,
             ),
             'ContextualSearch': grpc.unary_unary_rpc_method_handler(
                     servicer.ContextualSearch,
@@ -102,6 +118,33 @@ class SearchService(object):
             '/search.SearchService/Search',
             search__rec__pb2.SearchRequest.SerializeToString,
             search__rec__pb2.SearchResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def SearchV1(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/search.SearchService/SearchV1',
+            search__rec__pb2.SearchRequest.SerializeToString,
+            search__rec__pb2.SearchResponseV1.FromString,
             options,
             channel_credentials,
             insecure,

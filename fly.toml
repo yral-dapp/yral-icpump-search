@@ -1,17 +1,21 @@
-# fly.toml app configuration file generated for yral-icpumpsearch on 2024-10-03T21:04:21+05:30
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = 'yral-icpumpsearch'
+app = 'prod-yral-icpumpsearch'
 primary_region = 'ams'
 kill_signal = 'SIGINT'
 kill_timeout = '5s'
 swap_size_mb = 32768
 
+[build]
 
 [env]
   PORT = '50051'
+
+[http_service]
+  internal_port = 50051
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
 
 [[services]]
   protocol = 'tcp'

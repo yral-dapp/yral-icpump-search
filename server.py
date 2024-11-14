@@ -57,6 +57,32 @@ class SearchServicer(search_rec_pb2_grpc.SearchServiceServicer):
         except Exception as e:
             _LOGGER.error(f"SearchAgent failed: {e}")
         return response
+    
+    def SearchV1(self, request, context):
+        search_query = request.input_query
+        # _LOGGER.info(f"Received search query: {search_query}")
+        response = search_rec_pb2.SearchResponseV1()
+        try:
+            df, answer, rag_data = self.search_agent.process_query(search_query)
+            response.answer = answer
+            total_responses_fetched = len(df)
+            for i in range(total_responses_fetched):
+                item = response.items.add()
+                item.canister_id = df.iloc[i]['canister_id']
+                item.description = df.iloc[i]['description']
+                item.host = df.iloc[i]['host']
+                item.link = df.iloc[i]['link']
+                item.logo = df.iloc[i]['logo']
+                item.token_name = df.iloc[i]['token_name']
+                item.token_symbol = df.iloc[i]['token_symbol']
+                item.user_id = df.iloc[i]['user_id']
+                item.created_at = df.iloc[i]['created_at']
+                item.is_nsfw = df.iloc[i]['is_nsfw']
+            response.rag_data = rag_data
+        except Exception as e:
+            _LOGGER.error(f"SearchAgent failed: {e}")
+        return response
+
 
     def ContextualSearch(self, request, context):
         input_query = request.input_query

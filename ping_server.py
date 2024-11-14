@@ -3,7 +3,9 @@ import grpc
 import search_rec_pb2
 import search_rec_pb2_grpc
 # server = 'localhost:50052'
-server = 'yral-icpumpsearch.fly.dev:443'
+# server = 'yral-icpumpsearch.fly.dev:443'
+# server = 'stage-yral-icpumpsearch.fly.dev:443'
+server = 'prod-yral-icpumpsearch.fly.dev:443'
 
 def run():
     # Read the token from the environment variable
@@ -15,7 +17,7 @@ def run():
         request = search_rec_pb2.SearchRequest(input_query="what are some tokens related to dog? What are they talking about?")
         
         
-        response = stub.Search(request)#, metadata=metadata)
+        response = stub.SearchV1(request)#, metadata=metadata)
         print("Search service is up and running!")
         print("Received response:")
         print(f"Answer: {response.answer}")

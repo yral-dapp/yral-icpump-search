@@ -282,7 +282,7 @@ if __name__ == "__main__":
                 log_file.write('X'*10 + '\n')
             with open(output_file, 'a') as log_file:            
                 start_time = time.time()
-                result_df, answer = search_agent.process_query(user_query)
+                result_df, answer, rag_data = search_agent.process_query(user_query)
                 end_time = time.time()
                 response_time = end_time - start_time
 
@@ -290,7 +290,8 @@ if __name__ == "__main__":
                 log_file.write(f"\nResponse: {answer}\n")
                 log_file.write(f"\nResponse time: {response_time:.2f} seconds\n")
                 log_file.write("\nTop 5 results:\n")
-                result = result_df[['token_name', 'description', 'created_at']].head()
+                result = result_df[['token_name', 'description', 'created_at', 'is_nsfw']].head()
+                # result = result_df.head()
                 # result = result_df.copy()
                 
                 

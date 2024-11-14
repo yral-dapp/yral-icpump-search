@@ -3,13 +3,13 @@ syntax = "proto3";
 package search;
 
 service SearchService {
-  rpc Search (SearchRequest) returns (SearchResponse) {}
-  rpc ContextualSearch (ContextualSearchRequest) returns (ContextualSearchResponse) {}
+  rpc Search(SearchRequest) returns (SearchResponse) {}
+  rpc SearchV1(SearchRequest) returns (SearchResponseV1) {}
+  rpc ContextualSearch(ContextualSearchRequest)
+      returns (ContextualSearchResponse) {}
 }
 
-message SearchRequest {
-  string input_query = 1;
-}
+message SearchRequest { string input_query = 1; }
 
 message SearchResponse {
   repeated SearchItem items = 1;
@@ -29,15 +29,32 @@ message SearchItem {
   string created_at = 9;
 }
 
+message SearchResponseV1 {
+  repeated SearchItemV1 items = 1;
+  string answer = 2;
+  string rag_data = 3;
+}
+
+message SearchItemV1 {
+  string canister_id = 1;
+  string description = 2;
+  string host = 3;
+  string link = 4;
+  string logo = 5;
+  string token_name = 6;
+  string token_symbol = 7;
+  string user_id = 8;
+  string created_at = 9;
+  bool is_nsfw = 10;
+}
+
 message ContextualSearchRequest {
   string input_query = 1;
   repeated QueryResponsePair previous_interactions = 2;
   string rag_data = 3;
 }
 
-message ContextualSearchResponse {
-  string answer = 1;
-}
+message ContextualSearchResponse { string answer = 1; }
 
 message QueryResponsePair {
   string query = 1;

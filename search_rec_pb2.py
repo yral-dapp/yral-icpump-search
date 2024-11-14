@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10search_rec.proto\x12\x06search\"$\n\rSearchRequest\x12\x13\n\x0binput_query\x18\x01 \x01(\t\"U\n\x0eSearchResponse\x12!\n\x05items\x18\x01 \x03(\x0b\x32\x12.search.SearchItem\x12\x0e\n\x06\x61nswer\x18\x02 \x01(\t\x12\x10\n\x08rag_data\x18\x03 \x01(\t\"\xaf\x01\n\nSearchItem\x12\x13\n\x0b\x63\x61nister_id\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0c\n\x04host\x18\x03 \x01(\t\x12\x0c\n\x04link\x18\x04 \x01(\t\x12\x0c\n\x04logo\x18\x05 \x01(\t\x12\x12\n\ntoken_name\x18\x06 \x01(\t\x12\x14\n\x0ctoken_symbol\x18\x07 \x01(\t\x12\x0f\n\x07user_id\x18\x08 \x01(\t\x12\x12\n\ncreated_at\x18\t \x01(\t\"z\n\x17\x43ontextualSearchRequest\x12\x13\n\x0binput_query\x18\x01 \x01(\t\x12\x38\n\x15previous_interactions\x18\x02 \x03(\x0b\x32\x19.search.QueryResponsePair\x12\x10\n\x08rag_data\x18\x03 \x01(\t\"*\n\x18\x43ontextualSearchResponse\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\t\"4\n\x11QueryResponsePair\x12\r\n\x05query\x18\x01 \x01(\t\x12\x10\n\x08response\x18\x02 \x01(\t2\xa3\x01\n\rSearchService\x12\x39\n\x06Search\x12\x15.search.SearchRequest\x1a\x16.search.SearchResponse\"\x00\x12W\n\x10\x43ontextualSearch\x12\x1f.search.ContextualSearchRequest\x1a .search.ContextualSearchResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10search_rec.proto\x12\x06search\"$\n\rSearchRequest\x12\x13\n\x0binput_query\x18\x01 \x01(\t\"U\n\x0eSearchResponse\x12!\n\x05items\x18\x01 \x03(\x0b\x32\x12.search.SearchItem\x12\x0e\n\x06\x61nswer\x18\x02 \x01(\t\x12\x10\n\x08rag_data\x18\x03 \x01(\t\"\xaf\x01\n\nSearchItem\x12\x13\n\x0b\x63\x61nister_id\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0c\n\x04host\x18\x03 \x01(\t\x12\x0c\n\x04link\x18\x04 \x01(\t\x12\x0c\n\x04logo\x18\x05 \x01(\t\x12\x12\n\ntoken_name\x18\x06 \x01(\t\x12\x14\n\x0ctoken_symbol\x18\x07 \x01(\t\x12\x0f\n\x07user_id\x18\x08 \x01(\t\x12\x12\n\ncreated_at\x18\t \x01(\t\"Y\n\x10SearchResponseV1\x12#\n\x05items\x18\x01 \x03(\x0b\x32\x14.search.SearchItemV1\x12\x0e\n\x06\x61nswer\x18\x02 \x01(\t\x12\x10\n\x08rag_data\x18\x03 \x01(\t\"\xc2\x01\n\x0cSearchItemV1\x12\x13\n\x0b\x63\x61nister_id\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x0c\n\x04host\x18\x03 \x01(\t\x12\x0c\n\x04link\x18\x04 \x01(\t\x12\x0c\n\x04logo\x18\x05 \x01(\t\x12\x12\n\ntoken_name\x18\x06 \x01(\t\x12\x14\n\x0ctoken_symbol\x18\x07 \x01(\t\x12\x0f\n\x07user_id\x18\x08 \x01(\t\x12\x12\n\ncreated_at\x18\t \x01(\t\x12\x0f\n\x07is_nsfw\x18\n \x01(\x08\"z\n\x17\x43ontextualSearchRequest\x12\x13\n\x0binput_query\x18\x01 \x01(\t\x12\x38\n\x15previous_interactions\x18\x02 \x03(\x0b\x32\x19.search.QueryResponsePair\x12\x10\n\x08rag_data\x18\x03 \x01(\t\"*\n\x18\x43ontextualSearchResponse\x12\x0e\n\x06\x61nswer\x18\x01 \x01(\t\"4\n\x11QueryResponsePair\x12\r\n\x05query\x18\x01 \x01(\t\x12\x10\n\x08response\x18\x02 \x01(\t2\xe2\x01\n\rSearchService\x12\x39\n\x06Search\x12\x15.search.SearchRequest\x1a\x16.search.SearchResponse\"\x00\x12=\n\x08SearchV1\x12\x15.search.SearchRequest\x1a\x18.search.SearchResponseV1\"\x00\x12W\n\x10\x43ontextualSearch\x12\x1f.search.ContextualSearchRequest\x1a .search.ContextualSearchResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -37,12 +37,16 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SEARCHRESPONSE']._serialized_end=151
   _globals['_SEARCHITEM']._serialized_start=154
   _globals['_SEARCHITEM']._serialized_end=329
-  _globals['_CONTEXTUALSEARCHREQUEST']._serialized_start=331
-  _globals['_CONTEXTUALSEARCHREQUEST']._serialized_end=453
-  _globals['_CONTEXTUALSEARCHRESPONSE']._serialized_start=455
-  _globals['_CONTEXTUALSEARCHRESPONSE']._serialized_end=497
-  _globals['_QUERYRESPONSEPAIR']._serialized_start=499
-  _globals['_QUERYRESPONSEPAIR']._serialized_end=551
-  _globals['_SEARCHSERVICE']._serialized_start=554
-  _globals['_SEARCHSERVICE']._serialized_end=717
+  _globals['_SEARCHRESPONSEV1']._serialized_start=331
+  _globals['_SEARCHRESPONSEV1']._serialized_end=420
+  _globals['_SEARCHITEMV1']._serialized_start=423
+  _globals['_SEARCHITEMV1']._serialized_end=617
+  _globals['_CONTEXTUALSEARCHREQUEST']._serialized_start=619
+  _globals['_CONTEXTUALSEARCHREQUEST']._serialized_end=741
+  _globals['_CONTEXTUALSEARCHRESPONSE']._serialized_start=743
+  _globals['_CONTEXTUALSEARCHRESPONSE']._serialized_end=785
+  _globals['_QUERYRESPONSEPAIR']._serialized_start=787
+  _globals['_QUERYRESPONSEPAIR']._serialized_end=839
+  _globals['_SEARCHSERVICE']._serialized_start=842
+  _globals['_SEARCHSERVICE']._serialized_end=1068
 # @@protoc_insertion_point(module_scope)

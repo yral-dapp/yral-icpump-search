@@ -21,7 +21,7 @@ def run():
 
         # Make the call
         try:
-            response = stub.Search(request, metadata=metadata)
+            response = stub.SearchV1(request, metadata=metadata)
             print("Search Response:")
             print(f"Answer: {response.answer}")
             print('\n--XX--\n')
