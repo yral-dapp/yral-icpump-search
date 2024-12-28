@@ -13,7 +13,7 @@ This service provides semantic search capabilities over token metadata using Goo
 - Google Cloud Platform
   - BigQuery
   - Vertex AI
-  - PaLM API
+  - GeminiAPI
 - Docker
 - Fly.io for deployment
 
