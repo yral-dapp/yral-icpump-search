@@ -8,13 +8,13 @@ google-cloud-core==2.4.1
 google-crc32c==1.5.0
 google-resumable-media==2.7.1
 googleapis-common-protos==1.63.2
-grpcio==1.67.1
-grpcio-tools==1.67.1
-grpcio-status==1.67.1
+grpcio>=1.62.0
+grpcio-tools>=1.62.0
+grpcio-status>=1.62.0
 idna==3.7
 packaging==24.1
-proto-plus==1.24.0
-protobuf==5.27.2
+proto-plus>=1.24.0
+protobuf>=5.25.2
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 python-dateutil==2.9.0.post0
@@ -25,7 +25,7 @@ urllib3==2.2.2
 mlxtend
 upstash-vector==0.5.0
 pyyaml
-grpcio-reflection
+grpcio-reflection>=1.62.0
 pandas
 PyJWT==2.8.0
 cryptography==42.0.7

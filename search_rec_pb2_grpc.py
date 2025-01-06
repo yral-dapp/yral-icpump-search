@@ -5,7 +5,7 @@ import warnings
 
 import search_rec_pb2 as search__rec__pb2
 
-GRPC_GENERATED_VERSION = '1.67.1'
+GRPC_GENERATED_VERSION = '1.69.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
