@@ -170,4 +170,3 @@ curl "http://localhost:8000/hello?query=Tell%20me%20about%20these%20tokens"
 - Review our test cases in `test_case_results.txt`
 - Reach out to the team on Slack
 
-Happy coding! 🚀 
